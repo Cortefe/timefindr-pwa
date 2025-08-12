@@ -1,0 +1,1 @@
+self.addEventListener('install',e=>{e.waitUntil(caches.open('tf-v2').then(c=>c.addAll(['./','./index.html','./styles.css','./app.js','./manifest.json','./service-worker.js','./icons/icon-192.png','./icons/icon-512.png'])))});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)))})
