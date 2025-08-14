@@ -1,0 +1,101 @@
+<!doctype html><html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="manifest" href="manifest.json"><meta name="theme-color" content="#0D1E17">
+<title>TIMEFINDR Pro+ v2</title>
+<link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="styles.css"></head><body>
+<header><div class="wrap" style="display:flex;align-items:center;gap:12px;justify-content:space-between">
+  <div style="display:flex;align-items:center;gap:12px">
+    <img id="brand-logo" alt="TIMEFINDR" src="icons/icon-192.png" style="width:40px;height:40px;border-radius:8px;object-fit:cover;background:#0D1E17">
+    <div><strong>TIMEFINDR WATCHES</strong><div class="foot">Inventario · Invoices</div></div>
+  </div>
+  <nav>
+    <button class="tab active" data-tab="inv">Inventario</button>
+    <button class="tab" data-tab="new">Nueva pieza</button>
+    <button class="tab" data-tab="fin">Cuentas</button>
+    <button class="tab" data-tab="rep">Reportes</button>
+    <button class="tab" data-tab="cfg">Ajustes</button>
+  </nav>
+</div></header>
+<main class="wrap">
+
+<section id="view-inv" class="panel">
+  <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center">
+    <h2>Inventario</h2>
+    <div style="display:flex;gap:8px">
+      <input id="q" placeholder="Buscar modelo, ref, serie..." style="min-width:220px">
+      <button class="btn secondary" id="btn-csv">CSV</button>
+      <button class="btn secondary" id="btn-backup">Backup</button>
+      <label class="btn secondary" for="restore-file">Restaurar</label>
+      <input id="restore-file" type="file" accept="application/json" style="display:none">
+    </div>
+  </div>
+  <table id="inv-table"><thead><tr>
+    <th>Modelo</th><th>Ref.</th><th>Serie</th><th>Año</th><th>Cond.</th>
+    <th>Moneda</th><th class="right">Precio</th><th>Crédito</th><th></th>
+  </tr></thead><tbody></tbody></table>
+</section>
+
+<section id="view-new" class="panel" style="display:none">
+  <h2>Nueva pieza</h2>
+  <div class="grid-3">
+    <div><label>Modelo</label><input id="f-model"></div>
+    <div><label>Referencia</label><input id="f-ref"></div>
+    <div><label>Serie</label><input id="f-serial"></div>
+    <div><label>Año</label><input id="f-year" type="number" min="1900" max="2100"></div>
+    <div><label>Condición</label><select id="f-cond"><option>Nuevo sellado</option><option>Como nuevo</option><option>Excelente</option><option>Bueno</option><option>Usado</option></select></div>
+    <div><label>Contenido</label><input id="f-contents" placeholder="Caja, papeles..."></div>
+    <div><label>Moneda</label><select id="f-currency"><option>USD</option><option>MXN</option></select></div>
+    <div><label>COGS (Costo)</label><input id="f-cost" type="number" step="0.01"></div>
+    <div><label>Otros costos</label><input id="f-extra" type="number" step="0.01" value="0"></div>
+    <div><label>Impuesto (%) por defecto</label><input id="f-tax" type="number" step="0.01" value="0"></div>
+    <div>
+      <label>Crédito</label>
+      <div class="nowrap">
+        <button class="btn secondary" id="credit-no" aria-pressed="true">No</button>
+        <button class="btn secondary" id="credit-yes" aria-pressed="false">Sí</button>
+        <select id="credit-days" style="display:none; margin-left:8px"></select>
+      </div>
+      <div class="small">Si eliges <b>Sí</b>, selecciona de 1 a 60 días.</div>
+    </div>
+  </div>
+  <div class="small" style="margin-top:6px">El cliente se elige al generar el invoice.</div>
+  <div class="nowrap" style="margin-top:10px">
+    <button class="btn" id="btn-save">Guardar</button>
+    <button class="btn secondary" id="btn-reset">Limpiar</button>
+  </div>
+</section>
+
+<section id="view-fin" class="panel" style="display:none">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <h2>Cuentas por cobrar</h2><div class="small">Hoy: <span id="today"></span></div>
+  </div>
+  <table id="rcv-table"><thead><tr><th>Folio</th><th>Cliente</th><th>Pieza</th><th>Emisión</th><th>Vence</th><th class="right">Saldo</th><th></th></tr></thead><tbody></tbody></table>
+</section>
+
+<section id="view-rep" class="panel" style="display:none">
+  <h2>Reportes</h2>
+  <div class="small">Totales por moneda: ventas previstas, COGS, margen.</div>
+  <table id="rep-table"><thead><tr><th>Moneda</th><th class="right">Ventas</th><th class="right">COGS</th><th class="right">Margen</th></tr></thead><tbody></tbody></table>
+</section>
+
+<section id="view-cfg" class="panel" style="display:none">
+  <h2>Ajustes</h2>
+  <div class="grid-3">
+    <div><label>Negocio</label><input id="s-biz" value="TIMEFINDR WATCHES"></div>
+    <div><label>Correo</label><input id="s-email" value="ventas@timefindr.com"></div>
+    <div><label>Teléfono</label><input id="s-phone" value="+52 55 6318 4206"></div>
+    <div><label>Dirección</label><input id="s-addr" value="169 East Flagler St, Suite 1629, Miami, FL 33131"></div>
+    <div><label>Prefijo folio</label><input id="s-prefix" value="TF"></div>
+    <div><label>Impuesto def. (%)</label><input id="s-tax" type="number" value="0"></div>
+    <div><label>Moneda def.</label><select id="s-cur"><option>USD</option><option>MXN</option></select></div>
+    <div><label>Tema</label><select id="s-theme"><option value="auto">Auto</option><option value="dark">Oscuro</option><option value="light">Claro</option></select></div>
+    <div><label>Logo (opcional)</label><input id="s-logo" type="file" accept="image/*"></div>
+  </div>
+  <div class="small">Versión <span id="app-ver"></span>.</div>
+</section>
+
+</main>
+<div id="toast" class="toast"></div>
+<footer class="wrap foot">© <span id="y"></span> TIMEFINDR WATCHES</footer>
+<script src="app.js"></script></body></html>
